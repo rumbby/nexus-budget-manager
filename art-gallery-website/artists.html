@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artist Profile | ArtVision Gallery</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+   <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artist Profile | ArtVision Gallery</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Artist Page Styles */
+        :root {
+            --primary-color: #194A3C;
+            --accent-color: #D6A756;
+            --text-dark: #1b2d26;
+            --text-light: #f9f9f9;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            background-color: #f9f9f7;
+        }
+
+
+        .artist-hero-content {
+            max-width: 800px;
+            padding: 0 20px;
+        }
+
+        .artist-hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            font-family: 'Playfair Display', serif;
+            animation: fadeInUp 1s ease;
+        }
+
+        .artist-hero p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease 0.3s both;
+        }
+
+        .artist-specialty {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background-color: var(--accent-color);
+            color: var(--text-dark);
+            border-radius: 20px;
+            font-weight: 600;
+            animation: fadeInUp 1s ease 0.6s both;
+        }
+
+        /* Artist Bio Section */
+        .artist-bio {
+            padding: 5rem 0;
+            background-color: white;
+        }
+
+        .bio-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .artist-portrait {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .artist-portrait:hover {
+            transform: scale(1.02);
+        }
+
+        .artist-portrait img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .bio-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            font-family: 'Playfair Display', serif;
+            position: relative;
+        }
+
+        .bio-content h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background-color: var(--accent-color);
+        }
+
+        .bio-content p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .artist-social {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .artist-social a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .artist-social a:hover {
+            background-color: var(--accent-color);
+            transform: translateY(-3px);
+        }
+
+        /* Artist Gallery Section */
+        .artist-gallery {
+            padding: 5rem 0;
+            background-color: #f1f1f1;
+        }
+
+        .gallery-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            font-family: 'Playfair Display', serif;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background-color: var(--accent-color);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .artwork-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .artwork-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .artwork-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .artwork-info {
+            padding: 1.5rem;
+        }
+
+        .artwork-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .artwork-medium {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .artwork-price {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* Artist Statement Section */
+        .artist-statement {
+            padding: 5rem 0;
+            background-color: white;
+        }
+
+        .statement-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .statement-container h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--primary-color);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .statement-container p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+
+        .signature {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            color: var(--accent-color);
+            margin-top: 2rem;
+        }
+
+        /* Exhibitions Section */
+        .exhibitions {
+            padding: 5rem 0;
+            background-color: #f1f1f1;
+        }
+
+        .exhibitions-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .exhibitions-list {
+            list-style: none;
+        }
+
+        .exhibition-item {
+            background-color: white;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .exhibition-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .exhibition-year {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .exhibition-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .exhibition-location {
+            color: #666;
+        }
+
+        /* Contact Artist Section */
+        .contact-artist {
+            padding: 5rem 0;
+            background-color: white;
+        }
+
+        .contact-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .contact-container h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--primary-color);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .contact-btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .contact-btn:hover {
+            background-color: var(--accent-color);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .bio-container {
+                grid-template-columns: 1fr;
+            }
+
+            .artist-portrait {
+                max-width: 500px;
+                margin: 0 auto;
+            }
+
+            .artist-hero h1 {
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .artist-hero {
+                height: 60vh;
+            }
+
+            .artist-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .artist-hero p {
+                font-size: 1.2rem;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+
+        @media (max-width: 576px) {
+            .artist-hero {
+                height: 50vh;
+            }
+
+            .artist-hero h1 {
+                font-size: 2rem;
+            }
+
+            .section-title h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-container">
+            <div class="brand">
+                <div class="logo-icon">
+                    <i class="fas fa-gem"></i>
+                </div>
+                <h1 class="site-title">ArtVision</h1>
+            </div>
+
+            <nav class="nav-links">
+                <a href="./index.html">Home</a>
+                <a href="./gall.html">Gallery</a>
+                <a href="./artists.html">Artists</a>
+                <a href="./about.html">About</a>
+                <a href="./contact.html">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+   
+
+    <section class="artist-bio">
+        <div class="bio-container">
+            <div class="artist-portrait">
+                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=634&q=80" alt="Elena Voskresenskaya">
+            </div>
+            <div class="bio-content">
+                <h2>About The Artist</h2>
+                <p>Erlmy henstion is a celebrated jewelry designer renowned for her exquisite diamond creations and innovative metalwork. Born into a family of jewelers in St. Petersburg, Russia, she moved to New York in 2005 to establish her eponymous jewelry line.
+
+Her designs explore the interplay of light and structure, often incorporating intricate platinum settings and rare colored diamonds that create depth and movement in each piece. Elena's signature style has been described as "wearable poetry in precious metals and gems.".</p>
+                <p>Her work explores the intersection of memory, emotion, and the subconscious, often incorporating mixed media elements that add texture and depth to her paintings. Elena's unique style has been described as "a visual symphony of color and form."</p>
+                <p>She holds an MFA from the School of Visual Arts in New York and has exhibited her work internationally in galleries and museums.</p>
+                
+                <div class="artist-social">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fas fa-globe"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="artist-gallery">
+        <div class="gallery-container">
+            <div class="section-title">
+                <h2>Featured Works</h2>
+            </div>
+            <div class="gallery-grid">
+                <!-- Artwork 1 -->
+                <div class="artwork-card">
+                    <img src="./images/1.jpg" alt="Color Symphony" class="artwork-image">
+                    <div class="artwork-info">
+                        <h3 class="artwork-title">Blue Symphony</h3>
+                       
+                        <p class="artwork-price">$4,200</p>
+                    </div>
+                </div>
+                
+                <!-- Artwork 2 -->
+                <div class="artwork-card">
+                    <img src="./images/5.jpg" alt="Urban Echoes" class="artwork-image">
+                    <div class="artwork-info">
+                        <h3 class="artwork-title">fame Echoes</h3>
+                       
+                        <p class="artwork-price">$3,500</p>
+                    </div>
+                </div>
+                
+                <!-- Artwork 3 -->
+                <div class="artwork-card">
+                    <img src="./images/11.jpg" alt="Luminous Depths" class="artwork-image">
+                    <div class="artwork-info">
+                        <h3 class="artwork-title">Luminous Depths</h3>
+                     
+                        <p class="artwork-price">$5,800</p>
+                    </div>
+                </div>
+                
+                <!-- Artwork 4 -->
+                <div class="artwork-card">
+                    <img src="./images/8.jpg" alt="Vernal Awakening" class="artwork-image">
+                    <div class="artwork-info">
+                        <h3 class="artwork-title">Vernal Awakening</h3>
+                      
+                        <p class="artwork-price">$6,500</p>
+                    </div>
+                </div>
+                
+                <!-- Artwork 5 -->
+                <div class="artwork-card">
+                    <img src="./images/2.jpg" alt="Digital Dreams" class="artwork-image">
+                    <div class="artwork-info">
+                        <h3 class="artwork-title">fates of Dreams</h3>
+                        
+                        <p class="artwork-price">$950</p>
+                    </div>
+                </div>
+                
+                <!-- Artwork 6 -->
+                <div class="artwork-card">
+                    <img src="./images/9.jpg" alt="Silent Dialogue" class="artwork-image">
+                    <div class="artwork-info">
+                        <h3 class="artwork-title">Silent Dialogue</h3>
+                
+                        <p class="artwork-price">$4,800</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="artist-statement">
+        <div class="statement-container">
+            <h2>Artist Statement</h2>
+            <p>"My work is an exploration of the unseen emotional landscapes that exist beneath the surface of our conscious awareness. Through bold strokes and vibrant colors, I seek to capture the energy and movement of the human psyche."</p>
+            <p>"Each jewelry is a journey into the unknown, where intuition guides my hand and the canvas becomes a record of that exploration. I work primarily with acrylics and mixed media, building layers that reveal the history of the painting's creation."</p>
+            <p>"My hope is that viewers will find their own stories within these abstract forms, connecting with the work on a deeply personal level."</p>
+            <div class="signature">Erlmy henstion</div>
+        </div>
+    </section>
+
+    <section class="exhibitions">
+        <div class="exhibitions-container">
+            <h2 class="section-title">Selected Exhibitions</h2>
+            <ul class="exhibitions-list">
+                <li class="exhibition-item">
+                    <div class="exhibition-year">2023</div>
+                    <h3 class="exhibition-title">"Chromatic Vibrations"</h3>
+                    <p class="exhibition-location">Modern Art Gallery, New York</p>
+                </li>
+                <li class="exhibition-item">
+                    <div class="exhibition-year">2022</div>
+                    <h3 class="exhibition-title">"Abstract Realities"</h3>
+                    <p class="exhibition-location">International Art Fair, Miami</p>
+                </li>
+                <li class="exhibition-item">
+                    <div class="exhibition-year">2021</div>
+                    <h3 class="exhibition-title">"Beyond the Surface"</h3>
+                    <p class="exhibition-location">Contemporary Art Museum, Chicago</p>
+                </li>
+                <li class="exhibition-item">
+                    <div class="exhibition-year">2019</div>
+                    <h3 class="exhibition-title">"Russian Soul"</h3>
+                    <p class="exhibition-location">Hermitage Annex, London</p>
+                </li>
+                <li class="exhibition-item">
+                    <div class="exhibition-year">2018</div>
+                    <h3 class="exhibition-title">"New York Expressions"</h3>
+                    <p class="exhibition-location">Chelsea Gallery, New York</p>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <section class="contact-artist">
+        <div class="contact-container">
+            <h2>Contact the Artist</h2>
+            <p>For inquiries about available works, commissions, or exhibition opportunities</p>
+            <a href="mailto:elena@artvision.com" class="contact-btn">Send Message</a>
+        </div>
+    </section>
+
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact Us</a>
+            </div>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-pinterest"></i></a>
+            </div>
+            <p>&copy; 2024 ArtVision. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Simple animation for elements when they come into view
+        const animateOnScroll = () => {
+            const elements = document.querySelectorAll('.artist-hero h1, .artist-hero p, .artist-specialty');
+            
+            elements.forEach((element, index) => {
+                setTimeout(() => {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }, index * 300);
+            });
+        };
+
+        // Initialize animations when page loads
+        window.addEventListener('load', animateOnScroll);
+    </script>
+</body>
+</html>

@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery | ArtVision</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Gallery Page Styles */
+        :root {
+            --primary-color: #194A3C;
+            --accent-color: #D6A756;
+            --text-dark: #1b2d26;
+            --text-light: #f9f9f9;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            background-color: #f9f9f7;
+        }
+
+        /* Gallery Hero Section */
+        .gallery-hero {
+            height: 60vh;
+            background-color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .gallery-hero-content {
+            max-width: 800px;
+            padding: 0 20px;
+        }
+
+        .gallery-hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .gallery-hero p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Gallery Filters */
+        .gallery-filters {
+            background-color: white;
+            padding: 2rem 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .filter-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+
+        .filter-select {
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            min-width: 200px;
+            cursor: pointer;
+        }
+
+        .filter-reset {
+            padding: 0.75rem 1.5rem;
+            background-color: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-left: auto;
+        }
+
+        .filter-reset:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Gallery Grid */
+        .gallery-container {
+            padding: 5rem 0;
+        }
+
+        .gallery-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .art-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .art-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .art-image-container {
+            position: relative;
+            overflow: hidden;
+            height: 300px;
+        }
+
+        .art-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .art-card:hover .art-image {
+            transform: scale(1.05);
+        }
+
+        .art-info {
+            padding: 1.5rem;
+        }
+
+        .art-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .artist-name {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .art-medium {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .art-price {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-top: 0.5rem;
+        }
+
+        .quick-view-btn {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background-color: var(--accent-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            opacity: 0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .art-card:hover .quick-view-btn {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Gallery Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 3rem;
+        }
+
+        .pagination-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #ddd;
+            background-color: white;
+            color: var(--text-dark);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pagination-btn:hover:not(.disabled):not(.active) {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .pagination-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .pagination-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Quick View Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+            z-index: 2;
+        }
+
+        .modal-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .modal-image-container {
+            position: relative;
+            height: 500px;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+        .modal-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .modal-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .modal-artist {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-description {
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .modal-meta {
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-meta-item {
+            display: flex;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-meta-label {
+            font-weight: 600;
+            min-width: 100px;
+            color: var(--primary-color);
+        }
+
+        .modal-actions {
+            margin-top: auto;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .modal-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+        }
+
+        .modal-btn-primary:hover {
+            background-color: #123428;
+        }
+
+        .modal-btn-secondary {
+            background-color: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .modal-btn-secondary:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .gallery-hero h1 {
+                font-size: 3rem;
+            }
+
+            .modal-body {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-image-container {
+                height: 300px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .gallery-hero {
+                height: 50vh;
+            }
+
+            .gallery-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .gallery-hero p {
+                font-size: 1.2rem;
+            }
+
+            .filter-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-reset {
+                margin-left: 0;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+
+        @media (max-width: 576px) {
+            .gallery-hero {
+                height: 40vh;
+            }
+
+            .gallery-hero h1 {
+                font-size: 2rem;
+            }
+
+            .modal-content {
+                width: 95%;
+            }
+
+            .modal-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="main-header">
+        <div class="header-container">
+            <div class="brand">
+                <div class="logo-icon">
+                    <i class="fas fa-gem"></i>
+                </div>
+                <h1 class="site-title">LuxeGems</h1>
+            </div>
+
+            <nav class="nav-links">
+                <a href="./index.html">Home</a>
+                <a href="./gall.html" class="active">Collections</a>
+                <a href="./artists.html">Designers</a>
+                <a href="./about.html">About</a>
+                <a href="./contact.html">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="gallery-hero">
+        <div class="gallery-hero-content">
+            <h1>LuxeGems Collections</h1>
+            <p>Discover exquisite jewelry pieces crafted with precision and passion</p>
+        </div>
+    </section>
+
+    <section class="gallery-filters">
+        <div class="filter-container">
+            <div class="filter-group">
+                <label for="category-filter">Category</label>
+                <select id="category-filter" class="filter-select">
+                    <option value="all">All Collections</option>
+                    <option value="rings">Rings</option>
+                    <option value="necklaces">Necklaces</option>
+                    <option value="earrings">Earrings</option>
+                    <option value="bracelets">Bracelets</option>
+                    <option value="watches">Watches</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="medium-filter">Material</label>
+                <select id="medium-filter" class="filter-select">
+                    <option value="all">All Materials</option>
+                    <option value="gold">Gold</option>
+                    <option value="platinum">Platinum</option>
+                    <option value="silver">Silver</option>
+                    <option value="diamond">Diamond</option>
+                    <option value="pearl">Pearl</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="price-filter">Price Range</label>
+                <select id="price-filter" class="filter-select">
+                    <option value="all">All Prices</option>
+                    <option value="0-1000">Under $1,000</option>
+                    <option value="1000-5000">$1,000 - $5,000</option>
+                    <option value="5000-10000">$5,000 - $10,000</option>
+                    <option value="10000+">Over $10,000</option>
+                </select>
+            </div>
+            <button class="filter-reset">Reset Filters</button>
+        </div>
+    </section>
+
+    <section class="gallery-container">
+        <div class="gallery-grid">
+            <!-- Jewelry 1 -->
+            <div class="art-card" data-category="rings" data-medium="diamond" data-price="5000-10000">
+                <div class="art-image-container">
+                    <img src="./images/1.jpg" class="art-image">
+                    <button class="quick-view-btn" data-art-id="1">Quick View</button>
+                </div>
+                <div class="art-info">
+                    <h3 class="art-title">Eternity Diamond Ring</h3>
+                    <span class="artist-name">by Cartier</span>
+                    <p class="art-medium">Platinum • 2.5ct Diamond</p>
+                    <p class="art-price">$8,500</p>
+                </div>
+            </div>
+            
+            <!-- Jewelry 2 -->
+            <div class="art-card" data-category="necklaces" data-medium="pearl" data-price="1000-5000">
+                <div class="art-image-container">
+                    <img src="https://images.unsplash.com/photo-1599643477877-530eb83abc8e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Pearl Cascade Necklace" class="art-image">
+                    <button class="quick-view-btn" data-art-id="2">Quick View</button>
+                </div>
+                <div class="art-info">
+                    <h3 class="art-title">Pearl Cascade Necklace</h3>
+                    <span class="artist-name">by Mikimoto</span>
+                    <p class="art-medium">South Sea Pearls • 18k Gold</p>
+                    <p class="art-price">$3,200</p>
+                </div>
+            </div>
+            
+            <!-- Jewelry 3 -->
+            <div class="art-card" data-category="bracelets" data-medium="gold" data-price="10000+">
+                <div class="art-image-container">
+                    <img src="./images/3.jpg" class="art-image">
+                    <button class="quick-view-btn" data-art-id="3">Quick View</button>
+                </div>
+                <div class="art-info">
+                    <h3 class="art-title">Infinity Necklace</h3>
+                    <span class="artist-name">by Tiffany & Co.</span>
+                    <p class="art-medium">18k Yellow Gold • Hand-Engraved</p>
+                    <p class="art-price">$12,800</p>
+                </div>
+            </div>
+            
+            <!-- Jewelry 4 -->
+            <div class="art-card" data-category="earrings" data-medium="diamond" data-price="1000-5000">
+                <div class="art-image-container">
+                    <img src="./images/4.jpg" class="art-image">
+                    <button class="quick-view-btn" data-art-id="4">Quick View</button>
+                </div>
+                <div class="art-info">
+                    <h3 class="art-title">Diamond Stud Earrings</h3>
+                    <span class="artist-name">by Harry Winston</span>
+                    <p class="art-medium">Platinum • 1ct Diamonds</p>
+                    <p class="art-price">$4,750</p>
+                </div>
+            </div>
+            
+            <!-- Jewelry 5 -->
+            <div class="art-card" data-category="watches" data-medium="gold" data-price="10000+">
+                <div class="art-image-container">
+                    <img src="./images/5.jpg" class="art-image">
+                    <button class="quick-view-btn" data-art-id="5">Quick View</button>
+                </div>
+                <div class="art-info">
+                    <h3 class="art-title">Royal pendent</h3>
+                    <span class="artist-name">by Patek Philippe</span>
+                    <p class="art-medium">18k Rose Gold • Automatic</p>
+                    <p class="art-price">$24,500</p>
+                </div>
+            </div>
+            
+            <!-- Jewelry 6 -->
+            <div class="art-card" data-category="necklaces" data-medium="diamond" data-price="5000-10000">
+                <div class="art-image-container">
+                    <img src="https://images.unsplash.com/photo-1602173574767-37ac01994b2a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=735&q=80" alt="Eternal Diamond Pendant" class="art-image">
+                    <button class="quick-view-btn" data-art-id="6">Quick View</button>
+                </div>
+                <div class="art-info">
+                    <h3 class="art-title">Eternal Diamond Pendant</h3>
+                    <span class="artist-name">by Van Cleef & Arpels</span>
+                    <p class="art-medium">Platinum • 3ct Center Diamond</p>
+                    <p class="art-price">$9,200</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="pagination">
+            <button class="pagination-btn disabled">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="pagination-btn active">1</button>
+            <button class="pagination-btn">2</button>
+            <button class="pagination-btn">3</button>
+            <button class="pagination-btn">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </section>
+
+    <!-- Quick View Modal -->
+    <div class="modal-overlay" id="quickViewModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeModal">&times;</button>
+            <div class="modal-body">
+                <div class="modal-image-container">
+                    <img src="" alt="Jewelry" class="modal-image" id="modalArtImage">
+                </div>
+                <div class="modal-details">
+                    <h2 class="modal-title" id="modalArtTitle"></h2>
+                    <p class="modal-artist" id="modalArtistName"></p>
+                    <div class="modal-meta">
+                        <div class="modal-meta-item">
+                            <span class="modal-meta-label">Material:</span>
+                            <span id="modalArtMedium"></span>
+                        </div>
+                        <div class="modal-meta-item">
+                            <span class="modal-meta-label">Details:</span>
+                            <span id="modalArtDimensions"></span>
+                        </div>
+                        <div class="modal-meta-item">
+                            <span class="modal-meta-label">Collection:</span>
+                            <span id="modalArtYear"></span>
+                        </div>
+                        <div class="modal-meta-item">
+                            <span class="modal-meta-label">Price:</span>
+                            <span id="modalArtPrice"></span>
+                        </div>
+                    </div>
+                    <p class="modal-description" id="modalArtDescription"></p>
+                    <div class="modal-actions">
+                        <button class="modal-btn modal-btn-primary">Add to Cart</button>
+                        <button class="modal-btn modal-btn-secondary">Book Appointment</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact Us</a>
+            </div>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-pinterest"></i></a>
+            </div>
+            <p>&copy; 2024 LuxeGems. All rights reserved.</p>
+        </div>
+    </footer>
+
+       <script>
+        // Gallery Filter Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const categoryFilter = document.getElementById('category-filter');
+            const mediumFilter = document.getElementById('medium-filter');
+            const priceFilter = document.getElementById('price-filter');
+            const resetBtn = document.querySelector('.filter-reset');
+            const artCards = document.querySelectorAll('.art-card');
+
+            function filterArtworks() {
+                const categoryValue = categoryFilter.value;
+                const mediumValue = mediumFilter.value;
+                const priceValue = priceFilter.value;
+
+                artCards.forEach(card => {
+                    const cardCategory = card.getAttribute('data-category');
+                    const cardMedium = card.getAttribute('data-medium');
+                    const cardPrice = card.getAttribute('data-price');
+
+                    const categoryMatch = categoryValue === 'all' || cardCategory === categoryValue;
+                    const mediumMatch = mediumValue === 'all' || cardMedium === mediumValue;
+                    const priceMatch = priceValue === 'all' || cardPrice === priceValue;
+
+                    if (categoryMatch && mediumMatch && priceMatch) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+
+            categoryFilter.addEventListener('change', filterArtworks);
+            mediumFilter.addEventListener('change', filterArtworks);
+            priceFilter.addEventListener('change', filterArtworks);
+
+            resetBtn.addEventListener('click', function() {
+                categoryFilter.value = 'all';
+                mediumFilter.value = 'all';
+                priceFilter.value = 'all';
+                filterArtworks();
+            });
+
+            // Quick View Modal
+            const quickViewBtns = document.querySelectorAll('.quick-view-btn');
+            const quickViewModal = document.getElementById('quickViewModal');
+            const closeModal = document.getElementById('closeModal');
+
+            // Sample jewelry data
+            const jewelryPieces = {
+                1: {
+                    title: "Eternity Diamond Ring",
+                    artist: "Cartier",
+                    image: "./images/1.jpg",
+                    medium: "Platinum with diamonds",
+                    dimensions: "2.5 carat center diamond, pavé setting",
+                    year: "Signature Collection",
+                    price: "$8,500",
+                    description: "This exquisite eternity ring features a continuous line of brilliant diamonds set in platinum, symbolizing never-ending love. The 2.5 carat center diamond is surrounded by pavé-set diamonds for maximum sparkle."
+                },
+                2: {
+                    title: "Pearl Cascade Necklace",
+                    artist: "Mikimoto",
+                    image: "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
+                    medium: "South Sea pearls with diamonds",
+                    dimensions: "18-inch length, 8-10mm pearls",
+                    year: "Classic Collection",
+                    price: "$3,200",
+                    description: "Elegant strand of premium South Sea pearls with diamond accents on 18k white gold clasp. Each pearl is hand-selected for its perfect luster and shape."
+                },
+                3: {
+                    title: "Infinity Gold Bangle",
+                    artist: "Tiffany & Co.",
+                    image: "./images/3.jpg",
+                    medium: "18k yellow gold",
+                    dimensions: "2.5mm width, 7-inch circumference",
+                    year: "Infinity Collection",
+                    price: "$12,800",
+                    description: "Handcrafted 18k yellow gold bangle featuring an infinity pattern engraved by master artisans. The smooth, polished finish makes this piece versatile for both casual and formal wear."
+                },
+                4: {
+                    title: "Diamond Stud Earrings",
+                    artist: "Harry Winston",
+                    image: "./images/4.jpg",
+                    medium: "Platinum with diamonds",
+                    dimensions: "1 carat total weight, 4-prong setting",
+                    year: "Icon Collection",
+                    price: "$4,750",
+                    description: "Timeless diamond stud earrings set in platinum with secure four-prong settings. Each diamond is G-color, VS2 clarity, expertly cut for maximum brilliance."
+                },
+                5: {
+                    title: "Royal Gold Watch",
+                    artist: "Patek Philippe",
+                    image: "./images/5.jpg",
+                    medium: "18k rose gold",
+                    dimensions: "40mm case, automatic movement",
+                    year: "Heritage Collection",
+                    price: "$24,500",
+                    description: "Luxury automatic watch crafted from 18k rose gold with a sapphire crystal face and exhibition case back. The self-winding movement is decorated with Geneva stripes and features a 48-hour power reserve."
+                },
+                6: {
+                    title: "Eternal Diamond Pendant",
+                    artist: "Van Cleef & Arpels",
+                    image: "https://images.unsplash.com/photo-1602173574767-37ac01994b2a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=735&q=80",
+                    medium: "Platinum with diamond",
+                    dimensions: "3 carat center stone, 18-inch chain",
+                    year: "Signature Collection",
+                    price: "$9,200",
+                    description: "Stunning solitaire diamond pendant featuring a 3 carat brilliant-cut diamond set in a four-prong platinum mounting. The diamond is D-color, IF clarity, with excellent cut, polish, and symmetry."
+                }
+            };
+
+            quickViewBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const artId = this.getAttribute('data-art-id');
+                    const jewelry = jewelryPieces[artId];
+
+                    document.getElementById('modalArtImage').src = jewelry.image;
+                    document.getElementById('modalArtTitle').textContent = jewelry.title;
+                    document.getElementById('modalArtistName').textContent = "by " + jewelry.artist;
+                    document.getElementById('modalArtMedium').textContent = jewelry.medium;
+                    document.getElementById('modalArtDimensions').textContent = jewelry.dimensions;
+                    document.getElementById('modalArtYear').textContent = jewelry.year;
+                    document.getElementById('modalArtPrice').textContent = jewelry.price;
+                    document.getElementById('modalArtDescription').textContent = jewelry.description;
+
+                    quickViewModal.classList.add('active');
+                });
+            });
+
+            closeModal.addEventListener('click', function() {
+                quickViewModal.classList.remove('active');
+            });
+
+            // Close modal when clicking outside
+            quickViewModal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    quickViewModal.classList.remove('active');
+                }
+            });
+
+            // Pagination functionality
+            const paginationBtns = document.querySelectorAll('.pagination-btn:not(.disabled)');
+            paginationBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelector('.pagination-btn.active').classList.remove('active');
+                    this.classList.add('active');
+                    // Here you would typically load new content for the page
+                });
+            });
+        });
+    </script>
+</body>
+</html>
