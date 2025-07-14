@@ -384,7 +384,123 @@
             background-color: var(--primary-color);
             color: white;
         }
+  /* Canvas Section */
+        .canvas-section {
+            padding: 3rem 5%;
+            background-color: var(--secondary-color);
+            margin-top: 3rem;
+        }
 
+        body.dark-mode .canvas-section {
+            background-color: #383838;
+        }
+
+        .canvas-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+
+        .canvas-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .canvas-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .control-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            background-color: var(--primary-color);
+            color: white;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+
+        .control-btn:hover {
+            background-color: #8a3a16;
+        }
+
+        .color-picker {
+            width: 40px;
+            height: 40px;
+            border: none;
+            cursor: pointer;
+            background: none;
+        }
+
+        .brush-size {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .brush-size-label {
+            font-size: 0.9rem;
+        }
+
+        .brush-size-input {
+            width: 60px;
+        }
+
+        #drawing-canvas {
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            background-color: white;
+            cursor: crosshair;
+            box-shadow: var(--shadow);
+        }
+
+        body.dark-mode #drawing-canvas {
+            border-color: #555;
+        }
+
+        /* Spotlight Effect */
+        .spotlight-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .spotlight-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, transparent 100px, rgba(0, 0, 0, 0.9) 150px);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .spotlight-container:hover .spotlight-overlay {
+            opacity: 1;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 0.5rem;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 100;
+            max-width: 200px;
+        }
         /* Responsive Design */
         @media (max-width: 992px) {
             .gallery-hero h1 {
@@ -471,6 +587,28 @@
         <div class="gallery-hero-content">
             <h1>LuxeGems Collections</h1>
             <p>Discover exquisite jewelry pieces crafted with precision and passion</p>
+        </div>
+    </section>
+
+
+       <section class="tech-section">
+        <h2>Interactive Canvas</h2>
+        <p>Create your own masterpiece with our drawing tool. Your drawings are automatically saved!</p>
+        
+        <div class="canvas-controls">
+            <button id="clear-canvas" class="control-btn">Clear Canvas</button>
+            <input type="color" id="color-picker" value="#194A3C">
+            <input type="range" id="brush-size" min="1" max="50" value="5">
+            <span id="brush-size-value">5px</span>
+            <button id="save-drawing" class="control-btn">Save Drawing</button>
+            <button id="load-drawing" class="control-btn">Load Drawing</button>
+        </div>
+        
+        <canvas id="drawing-canvas"></canvas>
+        
+        <div class="art-info">
+            <h3 class="art-title">Your Creation</h3>
+            <p class="art-description">Draw something amazing and it will be saved for your next visit.</p>
         </div>
     </section>
 
@@ -817,7 +955,93 @@
                     // Here you would typically load new content for the page
                 });
             });
+
+            
         });
+        // Canvas Drawing with LocalStorage
+        const canvas = document.getElementById('drawing-canvas');
+        const ctx = canvas.getContext('2d');
+        const clearBtn = document.getElementById('clear-canvas');
+        const colorPicker = document.getElementById('color-picker');
+        const brushSize = document.getElementById('brush-size');
+        const brushSizeValue = document.getElementById('brush-size-value');
+        const saveBtn = document.getElementById('save-drawing');
+        const loadBtn = document.getElementById('load-drawing');
+        
+        // Set canvas size
+        function resizeCanvas() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            ctx.lineJoin = 'round';
+            ctx.lineCap = 'round';
+        }
+        
+        window.addEventListener('load', resizeCanvas);
+        window.addEventListener('resize', resizeCanvas);
+        
+        // Drawing state
+        let isDrawing = false;
+        let lastX = 0;
+        let lastY = 0;
+        let hue = 0;
+        
+        // Initialize from localStorage
+        function loadDrawing() {
+            const savedDrawing = localStorage.getItem('userDrawing');
+            if (savedDrawing) {
+                const img = new Image();
+                img.onload = function() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0);
+                };
+                img.src = savedDrawing;
+            }
+        }
+        
+        // Event listeners for drawing
+        canvas.addEventListener('mousedown', (e) => {
+            isDrawing = true;
+            [lastX, lastY] = [e.offsetX, e.offsetY];
+        });
+        
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', () => isDrawing = false);
+        canvas.addEventListener('mouseout', () => isDrawing = false);
+        
+        function draw(e) {
+            if (!isDrawing) return;
+            
+            ctx.strokeStyle = colorPicker.value;
+            ctx.lineWidth = brushSize.value;
+            
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(e.offsetX, e.offsetY);
+            ctx.stroke();
+            
+            [lastX, lastY] = [e.offsetX, e.offsetY];
+        }
+        
+        // Controls
+        clearBtn.addEventListener('click', () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        });
+        
+        brushSize.addEventListener('input', () => {
+            brushSizeValue.textContent = `${brushSize.value}px`;
+        });
+        
+        saveBtn.addEventListener('click', () => {
+            const dataURL = canvas.toDataURL('image/png');
+            localStorage.setItem('userDrawing', dataURL);
+            alert('Drawing saved! It will be here when you return.');
+        });
+        
+        loadBtn.addEventListener('click', loadDrawing);
+        
+        // Load any existing drawing on page load
+        loadDrawing();
+
     </script>
 </body>
 </html>
